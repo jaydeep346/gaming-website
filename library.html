@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block title %}My Library{% endblock %}
+{% block content %}
+<div class="library-page">
+    <div class="library-header">
+        <div class="library-container">
+            <h1 class="store-title">My Library</h1>
+            <p class="store-subtitle">Manage your rented games and membership</p>
+            <div class="library-status">
+                <div class="status-card">
+                    <div class="status-card-label">Membership</div>
+                    <div class="status-card-value" style="color:{% if membership %}{% if membership.slug == 'gold' %}#ffd700{% elif membership.slug == 'silver' %}#c0c0c0{% else %}#cd7f32{% endif %}{% else %}var(--text-muted){% endif %}">
+                        {{ membership.name if membership else 'None' }}
+                    </div>
+                </div>
+                <div class="status-card">
+                    <div class="status-card-label">Active Rentals</div>
+                    <div class="status-card-value">{{ active_rentals|length }}{% if membership and membership.max_rentals != -1 %} / {{ membership.max_rentals }}{% endif %}</div>
+                </div>
+                <div class="status-card">
+                    <div class="status-card-label">Total Rented</div>
+                    <div class="status-card-value">{{ active_rentals|length + history|length }}</div>
+                </div>
+                <div class="status-card">
+                    <div class="status-card-label">Wishlist</div>
+                    <div class="status-card-value">{{ wishlist|length }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="library-content">
+        <div class="library-tabs">
+            <button class="library-tab active" data-tab="active">Active Rentals</button>
+            <button class="library-tab" data-tab="history">Rental History</button>
+            <button class="library-tab" data-tab="wishlist">Wishlist</button>
+        </div>
+
+        <!-- Active Rentals -->
+        <div class="library-panel active" id="panel-active">
+            {% if active_rentals %}
+                {% for rental in active_rentals %}
+                <div class="rental-card">
+                    <div class="rental-card-image">
+                        {% if rental.game.banner_url %}
+                        <img src="{{ url_for('static', filename=rental.game.banner_url) }}" alt="{{ rental.game.title }}">
+                        {% else %}
+                        <div style="width:100%;height:100%;background:var(--bg-tertiary);display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:var(--text-muted);">{{ rental.game.title[0] }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="rental-card-info">
+                        <div class="rental-card-title">{{ rental.game.title }}</div>
+                        <div class="rental-card-meta">Rented: {{ rental.rented_at.strftime('%b %d, %Y') }} &middot; Due: {{ rental.due_at.strftime('%b %d, %Y') }}</div>
+                    </div>
+                    <div class="rental-card-actions">
+                        <a href="{{ url_for('game_detail', game_id=rental.game.id) }}" class="btn btn-secondary btn-sm">Play</a>
+                        <form action="{{ url_for('return_game', rental_id=rental.id) }}" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-outline btn-sm">Return</button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">&#128218;</div>
+                    <h3>No active rentals</h3>
+                    <p>Browse the store to find your next game.</p>
+                    <a href="{{ url_for('store') }}" class="btn btn-primary" style="margin-top:12px;">Browse Store</a>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- History -->
+        <div class="library-panel" id="panel-history">
+            {% if history %}
+                {% for rental in history %}
+                <div class="rental-card">
+                    <div class="rental-card-image">
+                        {% if rental.game.banner_url %}
+                        <img src="{{ url_for('static', filename=rental.game.banner_url) }}" alt="{{ rental.game.title }}">
+                        {% else %}
+                        <div style="width:100%;height:100%;background:var(--bg-tertiary);display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:var(--text-muted);">{{ rental.game.title[0] }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="rental-card-info">
+                        <div class="rental-card-title">{{ rental.game.title }}</div>
+                        <div class="rental-card-meta">Rented: {{ rental.rented_at.strftime('%b %d, %Y') }} &middot; Returned: {{ rental.returned_at.strftime('%b %d, %Y') if rental.returned_at else 'N/A' }}</div>
+                    </div>
+                    <div class="rental-card-actions">
+                        <a href="{{ url_for('game_detail', game_id=rental.game.id) }}" class="btn btn-secondary btn-sm">View</a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">&#128214;</div>
+                    <h3>No rental history</h3>
+                    <p>Your rental history will appear here.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Wishlist -->
+        <div class="library-panel" id="panel-wishlist">
+            {% if wishlist %}
+                {% for item in wishlist %}
+                <div class="rental-card">
+                    <div class="rental-card-image">
+                        {% if item.game.banner_url %}
+                        <img src="{{ url_for('static', filename=item.game.banner_url) }}" alt="{{ item.game.title }}">
+                        {% else %}
+                        <div style="width:100%;height:100%;background:var(--bg-tertiary);display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:var(--text-muted);">{{ item.game.title[0] }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="rental-card-info">
+                        <div class="rental-card-title">{{ item.game.title }}</div>
+                        <div class="rental-card-meta">{{ item.game.genre }} &middot; {% if item.game.price == 0 %}Free{% else %}${{"%.2f"|format(item.game.price)}}{% endif %}</div>
+                    </div>
+                    <div class="rental-card-actions">
+                        <a href="{{ url_for('game_detail', game_id=item.game.id) }}" class="btn btn-secondary btn-sm">View</a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">&#11088;</div>
+                    <h3>Wishlist is empty</h3>
+                    <p>Add games to your wishlist from the store.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

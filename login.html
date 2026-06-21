@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<div class="auth-page">
+    <div class="auth-card">
+        <div class="auth-logo">
+            <span class="logo-icon" style="font-size:2rem;width:48px;height:48px;">V</span>
+        </div>
+        <h1 class="auth-title">Welcome Back</h1>
+        <p class="auth-subtitle">Sign in to your VenoForge account</p>
+        <form method="POST">
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <input type="text" name="username" class="form-input" placeholder="Enter your username" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-input" placeholder="Enter your password" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block btn-lg">Sign In</button>
+        </form>
+        <div class="form-footer">
+            Don't have an account? <a href="{{ url_for('register') }}">Create one</a>
+        </div>
+        <div class="form-footer" style="margin-top:12px;font-size:0.78rem;">
+            Demo: admin / admin123 or demo / demo123
+        </div>
+    </div>
+</div>
+{% endblock %}

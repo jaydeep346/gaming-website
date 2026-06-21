@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<!-- Hero Banner Slider -->
+<section class="hero">
+    <div class="hero-slider">
+        {% for game in featured[:4] %}
+        <div class="hero-slide {% if loop.first %}active{% endif %}" style="background-image: url('{{ url_for('static', filename=game.banner_url) if game.banner_url else '' }}'); background-color: {% if loop.index == 1 %}#1a0533{% elif loop.index == 2 %}#0a1628{% elif loop.index == 3 %}#0f1a0a{% else %}#1a0a0a{% endif %};">
+        </div>
+        {% endfor %}
+        {% if not featured %}
+        <div class="hero-slide active" style="background: linear-gradient(135deg, #1a0533, #0a1628, #0a0a0f);"></div>
+        {% endif %}
+    </div>
+    <div class="hero-content">
+        {% if featured %}
+        <div class="hero-badge">Featured Game</div>
+        <h1 class="hero-title" id="heroTitle">{{ featured[0].title }}</h1>
+        <p class="hero-desc" id="heroDesc">{{ featured[0].description[:200] }}...</p>
+        <div class="hero-actions">
+            <a href="{{ url_for('game_detail', game_id=featured[0].id) }}" class="btn btn-primary btn-lg">View Details</a>
+            <a href="{{ url_for('store') }}" class="btn btn-secondary btn-lg">Browse Store</a>
+        </div>
+        {% else %}
+        <div class="hero-badge">Welcome</div>
+        <h1 class="hero-title">Welcome to <span class="gradient-text">VenoForge</span></h1>
+        <p class="hero-desc">Your ultimate gaming platform. Discover, rent, and play thousands of games with flexible membership plans.</p>
+        <div class="hero-actions">
+            <a href="{{ url_for('store') }}" class="btn btn-primary btn-lg">Browse Store</a>
+            <a href="{{ url_for('membership_page') }}" class="btn btn-secondary btn-lg">View Memberships</a>
+        </div>
+        {% endif %}
+    </div>
+    {% if featured|length > 1 %}
+    <div class="hero-dots">
+        {% for game in featured[:4] %}
+        <button class="hero-dot {% if loop.first %}active{% endif %}" data-index="{{ loop.index0 }}" data-title="{{ game.title }}" data-desc="{{ game.description[:200] }}..." data-link="{{ url_for('game_detail', game_id=game.id) }}"></button>
+        {% endfor %}
+    </div>
+    {% endif %}
+</section>
+
+<!-- Featured Games -->
+{% if featured %}
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">Featured Games</h2>
+        <a href="{{ url_for('store') }}" class="section-link">View All &rarr;</a>
+    </div>
+    <div class="games-scroll">
+        {% for game in featured %}
+        {% include '_game_card.html' %}
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<!-- Trending Games -->
+{% if trending %}
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">Trending Now</h2>
+        <a href="{{ url_for('store') }}" class="section-link">View All &rarr;</a>
+    </div>
+    <div class="games-scroll">
+        {% for game in trending %}
+        {% include '_game_card.html' %}
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<!-- New Releases -->
+{% if new_releases %}
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">New Releases</h2>
+        <a href="{{ url_for('store') }}" class="section-link">View All &rarr;</a>
+    </div>
+    <div class="games-scroll">
+        {% for game in new_releases %}
+        {% include '_game_card.html' %}
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<!-- Most Rented / Popular -->
+{% if popular %}
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">Most Popular</h2>
+        <a href="{{ url_for('store') }}" class="section-link">View All &rarr;</a>
+    </div>
+    <div class="games-scroll">
+        {% for game in popular %}
+        {% include '_game_card.html' %}
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<!-- Recommended -->
+{% if recommended %}
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">Recommended For You</h2>
+        <a href="{{ url_for('store') }}" class="section-link">View All &rarr;</a>
+    </div>
+    <div class="games-grid">
+        {% for game in recommended %}
+        {% include '_game_card.html' %}
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<!-- Membership CTA -->
+<section class="section" style="text-align: center;">
+    <h2 class="section-title" style="justify-content: center;">Ready to Start Gaming?</h2>
+    <p style="color: var(--text-secondary); margin: 12px 0 24px; max-width: 500px; margin-left: auto; margin-right: auto;">
+        Join VenoForge and get access to thousands of games with our flexible membership plans.
+    </p>
+    <a href="{{ url_for('membership_page') }}" class="btn btn-primary btn-lg">View Membership Plans</a>
+</section>
+{% endblock %}

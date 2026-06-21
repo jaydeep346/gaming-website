@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Support{% endblock %}
+{% block content %}
+<div class="store-page">
+    <div class="store-header">
+        <div class="store-container">
+            <h1 class="store-title">Support Center</h1>
+            <p class="store-subtitle">We're here to help you with any questions</p>
+        </div>
+    </div>
+    <div class="store-container" style="padding:40px 24px;">
+        <div class="games-grid" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));">
+            <div style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-lg);padding:28px;">
+                <h3 style="font-size:1.1rem;margin-bottom:8px;">Getting Started</h3>
+                <p style="color:var(--text-secondary);font-size:0.875rem;line-height:1.7;">New to VenoForge? Learn how to create an account, choose a membership plan, and start renting games in minutes.</p>
+            </div>
+            <div style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-lg);padding:28px;">
+                <h3 style="font-size:1.1rem;margin-bottom:8px;">Membership & Billing</h3>
+                <p style="color:var(--text-secondary);font-size:0.875rem;line-height:1.7;">Questions about membership plans, payments, upgrades, or cancellations? Find answers to common billing questions.</p>
+            </div>
+            <div style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-lg);padding:28px;">
+                <h3 style="font-size:1.1rem;margin-bottom:8px;">Technical Support</h3>
+                <p style="color:var(--text-secondary);font-size:0.875rem;line-height:1.7;">Having trouble with downloads, system requirements, or performance? Our technical team can help.</p>
+            </div>
+            <div style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-lg);padding:28px;">
+                <h3 style="font-size:1.1rem;margin-bottom:8px;">Account Issues</h3>
+                <p style="color:var(--text-secondary);font-size:0.875rem;line-height:1.7;">Locked out of your account? Need to update your email or password? Get help with account management.</p>
+            </div>
+            <div style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-lg);padding:28px;">
+                <h3 style="font-size:1.1rem;margin-bottom:8px;">Game Library</h3>
+                <p style="color:var(--text-secondary);font-size:0.875rem;line-height:1.7;">Learn how to manage your library, track active rentals, return games, and build your wishlist.</p>
+            </div>
+            <div style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-lg);padding:28px;">
+                <h3 style="font-size:1.1rem;margin-bottom:8px;">Contact Us</h3>
+                <p style="color:var(--text-secondary);font-size:0.875rem;line-height:1.7;">Can't find what you're looking for? Reach out to our support team directly at support@venoforge.com.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

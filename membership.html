@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}Membership{% endblock %}
+{% block content %}
+<div class="membership-page">
+    <div class="membership-hero">
+        <h1>Choose Your <span class="gradient-text">Membership</span></h1>
+        <p>Unlock access to thousands of games with our flexible rental plans. Cancel anytime.</p>
+    </div>
+
+    <div class="pricing-grid">
+        {% for plan in memberships %}
+        <div class="pricing-card {% if plan.slug == 'silver' %}popular{% endif %}">
+            <div class="pricing-icon" style="background:{{ plan.color }}22;color:{{ plan.color }};">
+                {% if plan.slug == 'bronze' %}&#128737;{% elif plan.slug == 'silver' %}&#11088;{% else %}&#128081;{% endif %}
+            </div>
+            <h3 class="pricing-name" style="color:{{ plan.color }};">{{ plan.name }}</h3>
+            <div class="pricing-price" style="color:{{ plan.color }};">
+                ${{ "%.2f"|format(plan.price) }}<span>/month</span>
+            </div>
+            <p class="pricing-desc">{{ plan.description }}</p>
+            <ul class="pricing-features">
+                {% set features = plan.features | tojson | default('[]') %}
+                {% if plan.features %}
+                    {% for f in plan.features.split('", "') if f %}
+                    <li>{{ f.strip('[]"') }}</li>
+                    {% endfor %}
+                {% endif %}
+            </ul>
+            {% if current_user.is_authenticated %}
+                {% if user_membership and user_membership.id == plan.id %}
+                <button class="btn btn-secondary btn-block" disabled>Current Plan</button>
+                {% else %}
+                <form action="{{ url_for('subscribe', membership_id=plan.id) }}" method="POST">
+                    <button type="submit" class="btn btn-primary btn-block">
+                        {% if user_membership %}Upgrade to {{ plan.name }}{% else %}Get {{ plan.name }}{% endif %}
+                    </button>
+                </form>
+                {% endif %}
+            {% else %}
+            <a href="{{ url_for('register') }}" class="btn btn-primary btn-block">Get Started</a>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Comparison Table -->
+    <div class="comparison-table section">
+        <h2 class="section-title" style="margin-bottom:24px;">Compare Plans</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    {% for plan in memberships %}
+                    <th style="color:{{ plan.color }}">{{ plan.name }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Monthly Rentals</td>
+                    {% for plan in memberships %}
+                    <td>{% if plan.max_rentals == -1 %}Unlimited{% else %}{{ plan.max_rentals }}{% endif %}</td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <td>Standard Support</td>
+                    <td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td>
+                </tr>
+                <tr>
+                    <td>Priority Support</td>
+                    <td class="cross">&#10007;</td><td class="check">&#10003;</td><td class="check">&#10003;</td>
+                </tr>
+                <tr>
+                    <td>Early Access</td>
+                    <td class="cross">&#10007;</td><td class="check">&#10003;</td><td class="check">&#10003;</td>
+                </tr>
+                <tr>
+                    <td>Exclusive Events</td>
+                    <td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td>
+                </tr>
+                <tr>
+                    <td>Free Merchandise</td>
+                    <td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td>
+                </tr>
+                <tr>
+                    <td>Custom Badges</td>
+                    <td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

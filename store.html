@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Store{% endblock %}
+{% block content %}
+<div class="store-page">
+    <div class="store-header">
+        <div class="store-container">
+            <h1 class="store-title">Game Store</h1>
+            <p class="store-subtitle">Browse our collection of {{ games|length }} games</p>
+        </div>
+    </div>
+    <div class="store-container">
+        <div class="store-layout">
+            <aside class="store-sidebar">
+                <div class="filter-group">
+                    <h3 class="filter-title">Genres</h3>
+                    <ul class="filter-list">
+                        <li><a href="{{ url_for('store') }}" class="{% if not current_genre %}active{% endif %}">All Games</a></li>
+                        {% for genre in genres %}
+                        <li><a href="{{ url_for('store', genre=genre, sort=sort) }}" class="{% if current_genre == genre %}active{% endif %}">{{ genre }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </aside>
+            <div class="store-main">
+                <div class="store-toolbar">
+                    <span class="store-count">{{ games|length }} game{{ 's' if games|length != 1 }} found{% if search %} for "{{ search }}"{% endif %}</span>
+                    <select class="sort-select" onchange="window.location.href=this.value">
+                        <option value="{{ url_for('store', genre=current_genre, sort='newest', q=search) }}" {% if sort == 'newest' %}selected{% endif %}>Newest First</option>
+                        <option value="{{ url_for('store', genre=current_genre, sort='rating', q=search) }}" {% if sort == 'rating' %}selected{% endif %}>Top Rated</option>
+                        <option value="{{ url_for('store', genre=current_genre, sort='title', q=search) }}" {% if sort == 'title' %}selected{% endif %}>A-Z</option>
+                    </select>
+                </div>
+                {% if games %}
+                <div class="games-grid">
+                    {% for game in games %}
+                    {% include '_game_card.html' %}
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">&#128269;</div>
+                    <h3>No games found</h3>
+                    <p>Try adjusting your search or filters.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
