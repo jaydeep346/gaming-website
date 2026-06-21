@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+<div class="admin-page">
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <div class="admin-sidebar-title">Admin Panel</div>
+            <ul class="admin-nav">
+                <li><a href="{{ url_for('admin_dashboard') }}" class="active">&#9632; Dashboard</a></li>
+                <li><a href="{{ url_for('admin_games') }}">&#9632; Games</a></li>
+                <li><a href="{{ url_for('admin_users') }}">&#9632; Users</a></li>
+                <li><a href="{{ url_for('admin_memberships') }}">&#9632; Memberships</a></li>
+            </ul>
+        </aside>
+        <div class="admin-main">
+            <div class="admin-header">
+                <h1 class="admin-title">Dashboard</h1>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-label">Total Users</div>
+                    <div class="stat-card-value">{{ stats.users }}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-label">Total Games</div>
+                    <div class="stat-card-value">{{ stats.games }}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-label">Active Rentals</div>
+                    <div class="stat-card-value">{{ stats.rentals }}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-label">Membership Plans</div>
+                    <div class="stat-card-value">{{ stats.memberships }}</div>
+                </div>
+            </div>
+            <div style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-lg);padding:24px;">
+                <h3 style="font-size:1rem;margin-bottom:12px;">Quick Actions</h3>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                    <a href="{{ url_for('admin_add_game') }}" class="btn btn-primary">Add New Game</a>
+                    <a href="{{ url_for('admin_games') }}" class="btn btn-secondary">Manage Games</a>
+                    <a href="{{ url_for('admin_users') }}" class="btn btn-secondary">Manage Users</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
